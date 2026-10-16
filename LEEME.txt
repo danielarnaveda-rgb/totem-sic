@@ -1,0 +1,52 @@
+AULA — TÓTEM B (versión de demostración SIC)
+============================================
+
+Incluye:
+- index.php: vista para alumnos, material y quizzes.
+- profesor.php: panel protegido para que la docente suba material y cree quizzes.
+- common.php / config.php: conexión y funciones compartidas.
+- materiales_iniciales/: los dos PDF entregados como material inicial.
+- Dos quizzes de ejemplo basados en esos cuadernillos.
+
+REQUISITOS
+- Apache
+- PHP con PDO MySQL y mbstring
+- MySQL o MariaDB
+
+INSTALACIÓN EN LUBUNTU (resumen)
+1. Copiar esta carpeta, por ejemplo a /var/www/html/aula.
+2. Instalar los componentes si faltan:
+   sudo apt update
+   sudo apt install apache2 php libapache2-mod-php php-mysql php-mbstring mariadb-server
+3. Activar servicios:
+   sudo systemctl enable --now apache2 mariadb
+4. config.php está preparado con localhost, base aula, usuario root y contraseña vacía.
+   En Lubuntu/MariaDB puede fallar el acceso de root por la configuración de seguridad.
+   Si falla, entrar con `sudo mariadb` y crear una base y usuario:
+      CREATE DATABASE aula CHARACTER SET utf8mb4;
+      CREATE USER 'aulaweb'@'localhost' IDENTIFIED BY 'CAMBIAR_ESTA_CLAVE';
+      GRANT ALL PRIVILEGES ON aula.* TO 'aulaweb'@'localhost';
+      FLUSH PRIVILEGES;
+   Luego actualizar DB_USER y DB_PASS en config.php con ese usuario y contraseña.
+5. Crear carpeta de subidas y dar permisos a Apache:
+   sudo mkdir -p /var/www/html/aula/uploads
+   sudo chown -R www-data:www-data /var/www/html/aula/uploads
+6. Abrir http://localhost/aula/ para alumnos.
+   Abrir http://localhost/aula/profesor.php para el panel docente.
+7. En el primer acceso al panel, crear el usuario y contraseña de la profesora.
+
+CONTENIDO Y AMPLIACIÓN
+- En el primer inicio, registra los dos PDF y crea dos quizzes de ejemplo.
+- La docente puede entrar a profesor.php > Material para subir nuevos archivos (PDF, Word,
+  presentaciones, planillas, texto e imágenes).
+- En + Nuevo quiz puede crear preguntas de opción múltiple (cuatro opciones) y marcar la correcta.
+- Los alumnos ven los materiales y quizzes en index.php y el sistema guarda resultados.
+- El contenido de demostración se carga una sola vez. Si se borra un quiz desde el panel,
+  no vuelve a aparecer automáticamente.
+
+IMPORTANTE
+- Es una versión inicial para probar en una computadora local. Antes de publicarla en una red
+  abierta, conviene configurar credenciales seguras y revisar permisos.
+- Si no permite subir archivos grandes, revisar upload_max_filesize y post_max_size en php.ini.
+- Los cuadernillos sugieren 4º año; por eso se asignaron a 4º año — Sistema de Información
+  Contable. Si corresponde otro curso, se puede cambiar en common.php.
